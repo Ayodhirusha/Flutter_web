@@ -23,19 +23,19 @@ class Sidebar extends StatelessWidget {
                   width: 40,
                   height: 40,
                   decoration: BoxDecoration(
-                    gradient: const LinearGradient(
+                    gradient: LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                       colors: [
-                        Color(0xFFD32F2F),
-                        Color(0xFFB71C1C),
-                        Color(0xFF000000),
+                        AppTheme.primaryColor,
+                        AppTheme.primaryDark,
+                        AppTheme.sidebarBackground,
                       ],
                     ),
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xFFD32F2F).withOpacity(0.4),
+                        color: AppTheme.primaryColor.withOpacity(0.4),
                         blurRadius: 8,
                         offset: const Offset(0, 4),
                       ),
@@ -123,13 +123,13 @@ class Sidebar extends StatelessWidget {
                 Container(
                   width: 40,
                   height: 40,
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                       colors: [
-                        Color(0xFFD32F2F),
-                        Color(0xFFB71C1C),
+                        AppTheme.primaryColor,
+                        AppTheme.primaryDark,
                       ],
                     ),
                     shape: BoxShape.circle,
@@ -184,18 +184,18 @@ class Sidebar extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           decoration: isActive
               ? BoxDecoration(
-                  gradient: const LinearGradient(
+                  gradient: LinearGradient(
                     begin: Alignment.centerLeft,
                     end: Alignment.centerRight,
                     colors: [
-                      Color(0xFFD32F2F),
-                      Color(0xFFC62828),
+                      AppTheme.primaryColor,
+                      AppTheme.primaryDark,
                     ],
                   ),
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFFD32F2F).withOpacity(0.3),
+                      color: AppTheme.primaryColor.withOpacity(0.3),
                       blurRadius: 8,
                       offset: const Offset(0, 4),
                     ),

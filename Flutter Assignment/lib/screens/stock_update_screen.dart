@@ -144,46 +144,95 @@ class _StockUpdateScreenState extends State<StockUpdateScreen> {
         // Form
         Container(
           padding: EdgeInsets.all(isMobile ? 16 : 24),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: AppTheme.softShadow,
-          ),
+          decoration: AppTheme.glassDecoration,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Product Search
               TextField(
                 controller: _searchController,
-                decoration: const InputDecoration(
-                  hintText: 'Search product...',
-                  prefixIcon: Icon(Icons.search),
+                onChanged: (value) => setState(() {}),
+                decoration: InputDecoration(
+                  hintText: 'Search product to update...',
+                  prefixIcon: const Icon(Icons.search_rounded),
+                  filled: true,
+                  fillColor: Colors.white.withOpacity(0.5),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide.none,
+                  ),
                 ),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 16),
 
               // Product List
               Container(
-                height: 200,
+                height: 250,
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey.shade200),
-                  borderRadius: BorderRadius.circular(12),
+                  color: Colors.white.withOpacity(0.3),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: Colors.white.withOpacity(0.5)),
                 ),
-                child: ListView.builder(
-                  itemCount: _filteredProducts.length,
-                  itemBuilder: (context, index) {
-                    final product = _filteredProducts[index];
-                    final isSelected = _selectedProductId == product.id;
-                    return ListTile(
-                      selected: isSelected,
-                      selectedTileColor: AppTheme.primaryColor.withOpacity(0.1),
-                      title: Text(product.name),
-                      subtitle: Text(
-                          'Stock: ${product.stockQuantity} | SKU: ${product.sku}'),
-                      onTap: () =>
-                          setState(() => _selectedProductId = product.id),
-                    );
-                  },
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(16),
+                  child: ListView.separated(
+                    itemCount: _filteredProducts.length,
+                    separatorBuilder: (context, index) => Divider(
+                      height: 1,
+                      color: Colors.white.withOpacity(0.2),
+                    ),
+                    itemBuilder: (context, index) {
+                      final product = _filteredProducts[index];
+                      final isSelected = _selectedProductId == product.id;
+                      return ListTile(
+                        selected: isSelected,
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 8),
+                        selectedTileColor:
+                            AppTheme.primaryColor.withOpacity(0.1),
+                        leading: Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: isSelected
+                                ? AppTheme.primaryColor
+                                : AppTheme.primaryColor.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Icon(
+                            Icons.inventory_2_rounded,
+                            color: isSelected
+                                ? Colors.white
+                                : AppTheme.primaryColor,
+                            size: 20,
+                          ),
+                        ),
+                        title: Text(
+                          product.name,
+                          style: TextStyle(
+                            fontWeight:
+                                isSelected ? FontWeight.w700 : FontWeight.w600,
+                            color: AppTheme.textPrimary,
+                          ),
+                        ),
+                        subtitle: Text(
+                          'SKU: ${product.sku} | Current: ${product.stockQuantity}',
+                          style: TextStyle(
+                            color: isSelected
+                                ? AppTheme.textPrimary.withOpacity(0.7)
+                                : AppTheme.textSecondary,
+                            fontSize: 12,
+                          ),
+                        ),
+                        trailing: isSelected
+                            ? const Icon(Icons.check_circle_rounded,
+                                color: AppTheme.primaryColor)
+                            : null,
+                        onTap: () =>
+                            setState(() => _selectedProductId = product.id),
+                      );
+                    },
+                  ),
                 ),
               ),
               const SizedBox(height: 20),
@@ -264,13 +313,13 @@ class _StockUpdateScreenState extends State<StockUpdateScreen> {
   }
 
   Widget _buildMobileTypeButtons() {
-    return Column(
+    return Row(
       children: [
         _buildTypeButton(
             'Stock In', Icons.arrow_downward, AppTheme.successColor),
-        const SizedBox(height: 8),
+        const SizedBox(width: 8),
         _buildTypeButton('Stock Out', Icons.arrow_upward, AppTheme.errorColor),
-        const SizedBox(height: 8),
+        const SizedBox(width: 8),
         _buildTypeButton('Adjustment', Icons.sync_alt, AppTheme.infoColor),
       ],
     );
@@ -299,25 +348,46 @@ class _StockUpdateScreenState extends State<StockUpdateScreen> {
     return Expanded(
       child: InkWell(
         onTap: () => setState(() => _movementType = typeValue),
-        child: Container(
+        borderRadius: BorderRadius.circular(16),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
           padding: const EdgeInsets.symmetric(vertical: 16),
-          decoration: BoxDecoration(
-            color: isSelected ? color.withOpacity(0.1) : Colors.grey.shade50,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: isSelected ? color : Colors.transparent,
-              width: 2,
-            ),
-          ),
+          decoration: isSelected
+              ? BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      color,
+                      color.withOpacity(0.8),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: color.withOpacity(0.3),
+                      blurRadius: 12,
+                      offset: const Offset(0, 6),
+                    ),
+                  ],
+                )
+              : AppTheme.glassDecoration.copyWith(
+                  borderRadius: BorderRadius.circular(16),
+                ),
           child: Column(
             children: [
-              Icon(icon, color: isSelected ? color : Colors.grey),
-              const SizedBox(height: 4),
+              Icon(
+                icon,
+                color: isSelected ? Colors.white : color.withOpacity(0.7),
+                size: 24,
+              ),
+              const SizedBox(height: 8),
               Text(
                 label,
                 style: TextStyle(
-                  color: isSelected ? color : Colors.grey.shade600,
-                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                  color: isSelected ? Colors.white : AppTheme.textPrimary,
+                  fontSize: 13,
+                  fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                 ),
               ),
             ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:warehouse_admin/core/theme.dart';
 import 'package:warehouse_admin/widgets/sidebar.dart';
 import 'package:warehouse_admin/widgets/top_navbar.dart';
 
@@ -30,14 +31,14 @@ class MainLayout extends StatelessWidget {
                 ),
               ),
               flexibleSpace: Container(
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                     colors: [
-                      Color(0xFFD32F2F),
-                      Color(0xFFB71C1C),
-                      Color(0xFF000000),
+                      AppTheme.primaryDark,
+                      AppTheme.primaryColor,
+                      AppTheme.sidebarBackground,
                     ],
                   ),
                 ),
@@ -69,8 +70,8 @@ class MainLayout extends StatelessWidget {
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                       colors: [
-                        const Color(0xFFF8FAFC),
-                        const Color(0xFFD32F2F).withOpacity(0.05),
+                        AppTheme.backgroundColor,
+                        AppTheme.primaryColor.withOpacity(0.05),
                       ],
                     ),
                   ),
@@ -94,8 +95,8 @@ class MainLayout extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            const Color(0xFFF8FAFC),
-            const Color(0xFFD32F2F).withOpacity(0.05),
+            AppTheme.backgroundColor,
+            AppTheme.primaryColor.withOpacity(0.05),
           ],
         ),
       ),

@@ -16,12 +16,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
   bool _isLoading = true;
   String _error = '';
 
-  static const _headerTitleStyle = TextStyle(
-    fontSize: 28,
-    fontWeight: FontWeight.w900,
-    color: Colors.white,
-    letterSpacing: -0.3,
-  );
+  // Hover states for stat cards
+  final Set<int> _hoveredStatCards = {};
+  // Hover states for activity items
+  final Set<int> _hoveredActivityItems = {};
 
   @override
   void initState() {
@@ -85,69 +83,149 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     final stats = _stats!;
 
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(20),
-      child: Container(
-        color: const Color(0xFFF7F7FB),
+    return Container(
+      decoration: AppTheme.glassDecoration,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Gradient header
+            // Modern Header with Pattern
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.fromLTRB(24, 22, 24, 22),
+              padding: const EdgeInsets.fromLTRB(28, 28, 28, 32),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
+                    AppTheme.primaryDark,
                     AppTheme.primaryColor,
-                    AppTheme.primaryColor.withOpacity(0.82),
-                    AppTheme.successColor.withOpacity(0.55),
+                    AppTheme.primaryColor.withOpacity(0.85),
                   ],
                 ),
               ),
-              child: Row(
+              child: Stack(
                 children: [
-                  Container(
-                    width: 44,
-                    height: 44,
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.18),
-                      borderRadius: BorderRadius.circular(14),
-                      border: Border.all(
-                        color: Colors.white.withOpacity(0.25),
-                        width: 1,
+                  // Decorative circles
+                  Positioned(
+                    right: -20,
+                    top: -20,
+                    child: Container(
+                      width: 120,
+                      height: 120,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: Colors.white.withOpacity(0.1),
+                          width: 2,
+                        ),
                       ),
                     ),
-                    child: const Icon(
-                      Icons.dashboard_outlined,
-                      color: Colors.white,
-                      size: 22,
+                  ),
+                  Positioned(
+                    right: 40,
+                    bottom: -30,
+                    child: Container(
+                      width: 80,
+                      height: 80,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: Colors.white.withOpacity(0.08),
+                          width: 1,
+                        ),
+                      ),
                     ),
                   ),
-                  const SizedBox(width: 14),
-                  const Text('Dashboard', style: _headerTitleStyle),
-                  const Spacer(),
-                  IconButton(
-                    onPressed: _loadDashboardData,
-                    icon: const Icon(Icons.refresh, color: Colors.white),
-                    tooltip: 'Refresh',
+                  // Content
+                  Row(
+                    children: [
+                      Container(
+                        width: 52,
+                        height: 52,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.15),
+                              blurRadius: 12,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: const Icon(
+                          Icons.dashboard_rounded,
+                          color: AppTheme.primaryColor,
+                          size: 26,
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Dashboard',
+                              style: TextStyle(
+                                fontSize: 26,
+                                fontWeight: FontWeight.w800,
+                                color: Colors.white,
+                                letterSpacing: -0.5,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'Welcome back, Admin',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.white.withOpacity(0.75),
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.15),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: IconButton(
+                          onPressed: _loadDashboardData,
+                          icon: const Icon(Icons.refresh_rounded,
+                              color: Colors.white),
+                          tooltip: 'Refresh',
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
             ),
 
-            // Body
+            // Body with new layout
             Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Section title
+                  Text(
+                    'Overview',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: AppTheme.textSecondary,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
                   isMobile
                       ? _buildMobileStatsGrid(stats)
                       : _buildDesktopStatsRow(stats),
-                  const SizedBox(height: 18),
+                  const SizedBox(height: 28),
                   _buildRecentActivityCard(),
                 ],
               ),
@@ -164,6 +242,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         Row(
           children: [
             _buildGlassStatCard(
+              0,
               'Total Products',
               '${stats.totalProducts}',
               Icons.inventory_2_outlined,
@@ -171,6 +250,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
             const SizedBox(width: 12),
             _buildGlassStatCard(
+              1,
               'Low Stock',
               '${stats.lowStockItems}',
               Icons.warning_amber_outlined,
@@ -182,6 +262,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         Row(
           children: [
             _buildGlassStatCard(
+              2,
               'Out of Stock',
               '${stats.outOfStockItems}',
               Icons.error_outline,
@@ -189,9 +270,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
             const SizedBox(width: 12),
             _buildGlassStatCard(
+              3,
               'Total Value',
               'Rs.${_formatValue(stats.totalInventoryValue)}',
-              Icons.attach_money_outlined,
+              Icons.account_balance_wallet_outlined,
               AppTheme.successColor,
             ),
           ],
@@ -204,6 +286,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Row(
       children: [
         _buildGlassStatCard(
+          0,
           'Total Products',
           '${stats.totalProducts}',
           Icons.inventory_2_outlined,
@@ -211,6 +294,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
         const SizedBox(width: 16),
         _buildGlassStatCard(
+          1,
           'Low Stock',
           '${stats.lowStockItems}',
           Icons.warning_amber_outlined,
@@ -218,6 +302,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
         const SizedBox(width: 16),
         _buildGlassStatCard(
+          2,
           'Out of Stock',
           '${stats.outOfStockItems}',
           Icons.error_outline,
@@ -225,9 +310,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
         const SizedBox(width: 16),
         _buildGlassStatCard(
+          3,
           'Total Value',
           'Rs.${_formatValue(stats.totalInventoryValue)}',
-          Icons.currency_rupee_outlined,
+          Icons.account_balance_wallet_outlined,
           AppTheme.successColor,
         ),
       ],
@@ -242,77 +328,111 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget _buildGlassStatCard(
-      String title, String value, IconData icon, Color color) {
+      int index, String title, String value, IconData icon, Color color) {
+    final isHovered = _hoveredStatCards.contains(index);
+
     return Expanded(
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: const Color(0xFFEAEAF2), width: 1),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 16,
-              offset: const Offset(0, 8),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              height: 4,
-              decoration: BoxDecoration(
-                color: color.withOpacity(0.75),
-                borderRadius: BorderRadius.circular(999),
+      child: MouseRegion(
+        onEnter: (_) => setState(() => _hoveredStatCards.add(index)),
+        onExit: (_) => setState(() => _hoveredStatCards.remove(index)),
+        cursor: SystemMouseCursors.click,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeOutCubic,
+          transform: isHovered
+              ? Matrix4.translationValues(0, -4, 0)
+              : Matrix4.identity(),
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: isHovered
+                  ? Colors.white.withOpacity(0.7)
+                  : Colors.white.withOpacity(0.5),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: isHovered
+                    ? color.withOpacity(0.4)
+                    : Colors.white.withOpacity(0.6),
+                width: isHovered ? 1.5 : 1,
               ),
-            ),
-            const SizedBox(height: 14),
-            Row(
-              children: [
-                Container(
-                  width: 42,
-                  height: 42,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        color.withOpacity(0.22),
-                        color.withOpacity(0.08),
-                      ],
-                    ),
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                  child: Icon(icon, color: color, size: 22),
+              boxShadow: [
+                BoxShadow(
+                  color: color.withOpacity(isHovered ? 0.2 : 0.08),
+                  blurRadius: isHovered ? 30 : 20,
+                  offset: Offset(0, isHovered ? 12 : 8),
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Colors.grey.shade700,
-                      fontWeight: FontWeight.w700,
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      width: 48,
+                      height: 48,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            color,
+                            color.withOpacity(0.7),
+                          ],
+                        ),
+                        borderRadius: BorderRadius.circular(14),
+                        boxShadow: [
+                          BoxShadow(
+                            color: color.withOpacity(isHovered ? 0.4 : 0.3),
+                            blurRadius: isHovered ? 12 : 8,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: Icon(icon, color: Colors.white, size: 24),
                     ),
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: color.withOpacity(isHovered ? 0.2 : 0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Icon(
+                        Icons.trending_up_rounded,
+                        color: color,
+                        size: 16,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  value,
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.w800,
+                    color: AppTheme.textPrimary,
+                    height: 1.0,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: AppTheme.textSecondary,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 12),
-            Text(
-              value,
-              style: const TextStyle(
-                fontSize: 26,
-                fontWeight: FontWeight.w900,
-                color: Color(0xFF0F172A),
-                height: 1.0,
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -320,15 +440,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Widget _buildRecentActivityCard() {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: const Color(0xFFEAEAF2), width: 1),
+        color: Colors.white.withOpacity(0.5),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.white.withOpacity(0.6)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 16,
+            color: AppTheme.primaryColor.withOpacity(0.05),
+            blurRadius: 20,
             offset: const Offset(0, 8),
           ),
         ],
@@ -337,43 +457,88 @@ class _DashboardScreenState extends State<DashboardScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                width: 38,
-                height: 38,
-                decoration: BoxDecoration(
-                  color: AppTheme.primaryColor.withOpacity(0.10),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Icon(
-                  Icons.history,
-                  color: AppTheme.primaryColor,
-                  size: 20,
-                ),
+              Row(
+                children: [
+                  Container(
+                    width: 44,
+                    height: 44,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          AppTheme.primaryColor,
+                          AppTheme.primaryColor.withOpacity(0.7),
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppTheme.primaryColor.withOpacity(0.25),
+                          blurRadius: 8,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: const Icon(
+                      Icons.history_rounded,
+                      color: Colors.white,
+                      size: 22,
+                    ),
+                  ),
+                  const SizedBox(width: 14),
+                  Text(
+                    'Recent Activity',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                      color: AppTheme.textPrimary,
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(width: 12),
-              Text(
-                'Recent Activity',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w800,
-                  color: AppTheme.textPrimary,
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: AppTheme.primaryColor.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  '${_recentActivity.length} items',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: AppTheme.primaryColor,
+                  ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 20),
           if (_recentActivity.isEmpty)
             Center(
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 18),
-                child: Text(
-                  'No recent activity',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey.shade500,
-                    fontWeight: FontWeight.w500,
-                  ),
+                padding: const EdgeInsets.symmetric(vertical: 24),
+                child: Column(
+                  children: [
+                    Icon(
+                      Icons.inbox_outlined,
+                      size: 48,
+                      color: Colors.grey.shade300,
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      'No recent activity',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey.shade400,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             )
@@ -386,6 +551,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               return Column(
                 children: [
                   _buildGlassActivityItem(
+                    index,
                     movement.productName,
                     '${isPositive ? '+' : '-'}${movement.quantity} units',
                     _formatTimeAgo(movement.timestamp),
@@ -393,9 +559,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     movement.reason,
                   ),
                   if (index < _recentActivity.length - 1)
-                    Divider(
-                      height: 16,
-                      color: Colors.grey.shade200,
+                    Container(
+                      margin: const EdgeInsets.symmetric(vertical: 8),
+                      height: 1,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            Colors.transparent,
+                            Colors.grey.shade200,
+                            Colors.transparent,
+                          ],
+                        ),
+                      ),
                     ),
                 ],
               );
@@ -420,76 +595,140 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
   }
 
-  Widget _buildGlassActivityItem(String product, String quantity, String time,
-      bool isPositive, String reason) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            width: 38,
-            height: 38,
-            decoration: BoxDecoration(
-              color: isPositive
-                  ? AppTheme.successColor.withOpacity(0.12)
-                  : AppTheme.errorColor.withOpacity(0.12),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(
-              isPositive ? Icons.south : Icons.north,
-              color: isPositive ? AppTheme.successColor : AppTheme.errorColor,
-              size: 18,
-            ),
+  Widget _buildGlassActivityItem(int index, String product, String quantity,
+      String time, bool isPositive, String reason) {
+    final isHovered = _hoveredActivityItems.contains(index);
+    final color = isPositive ? AppTheme.successColor : AppTheme.errorColor;
+
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hoveredActivityItems.add(index)),
+      onExit: (_) => setState(() => _hoveredActivityItems.remove(index)),
+      cursor: SystemMouseCursors.click,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOutCubic,
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: isHovered ? color.withOpacity(0.12) : color.withOpacity(0.05),
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(
+            color: isHovered ? color.withOpacity(0.3) : color.withOpacity(0.1),
+            width: isHovered ? 1.5 : 1,
           ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  product,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700,
-                    color: Color(0xFF0F172A),
-                  ),
+        ),
+        child: Row(
+          children: [
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              width: 42,
+              height: 42,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    color,
+                    color.withOpacity(0.7),
+                  ],
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  reason.isNotEmpty ? reason : 'Stock update',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey.shade600,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  time,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey.shade500,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: isHovered
+                    ? [
+                        BoxShadow(
+                          color: color.withOpacity(0.3),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ]
+                    : [],
+              ),
+              child: Icon(
+                isPositive
+                    ? Icons.arrow_downward_rounded
+                    : Icons.arrow_upward_rounded,
+                color: Colors.white,
+                size: 20,
+              ),
             ),
-          ),
-          const SizedBox(width: 12),
-          Text(
-            quantity,
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w800,
-              color: isPositive ? AppTheme.successColor : AppTheme.errorColor,
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    product,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: AppTheme.textPrimary,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.schedule_rounded,
+                        size: 12,
+                        color: Colors.grey.shade400,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        time,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey.shade500,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      if (reason.isNotEmpty) ...[
+                        const SizedBox(width: 8),
+                        Container(
+                          width: 4,
+                          height: 4,
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade300,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            reason,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey.shade500,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: color.withOpacity(isHovered ? 0.2 : 0.1),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                quantity,
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w700,
+                  color: color,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

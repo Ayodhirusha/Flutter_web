@@ -148,10 +148,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
       key: _formKey,
       child: Container(
         padding: EdgeInsets.all(isMobile ? 16 : 24),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: AppTheme.softShadow,
+        decoration: AppTheme.glassDecoration.copyWith(
+          borderRadius: BorderRadius.circular(20),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -354,8 +352,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           decoration: BoxDecoration(
-            color: Colors.grey.shade50,
+            color: const Color(0xFFF8FAFC),
             borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: AppTheme.borderColor.withOpacity(0.5)),
           ),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<String>(

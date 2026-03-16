@@ -210,27 +210,13 @@ class _ProductsScreenState extends State<ProductsScreen> {
   }
 
   Widget _buildMobileProductCard(Product product) {
-    Color statusColor;
-    switch (product.status) {
-      case 'Active':
-        statusColor = AppTheme.successColor;
-        break;
-      case 'Low Stock':
-        statusColor = AppTheme.warningColor;
-        break;
-      case 'Out of Stock':
-        statusColor = AppTheme.errorColor;
-        break;
-      default:
-        statusColor = Colors.grey;
-    }
+    // Determine status based on stock quantity
+    final (statusText, statusColor) = _getStatusInfo(product);
 
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: AppTheme.softShadow,
+      decoration: AppTheme.glassDecoration.copyWith(
+        borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -246,17 +232,21 @@ class _ProductsScreenState extends State<ProductsScreen> {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
-                  color: statusColor.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(8),
+                  color: statusColor.withOpacity(0.15),
+                  borderRadius: BorderRadius.circular(20),
+                  border:
+                      Border.all(color: statusColor.withOpacity(0.3), width: 1),
                 ),
                 child: Text(
-                  product.status,
+                  statusText,
                   style: TextStyle(
-                      color: statusColor,
-                      fontSize: 11,
-                      fontWeight: FontWeight.w600),
+                    color: statusColor,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
             ],
@@ -329,10 +319,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
 
   Widget _buildDesktopProductTable() {
     return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: AppTheme.softShadow,
+      decoration: AppTheme.glassDecoration.copyWith(
+        borderRadius: BorderRadius.circular(20),
       ),
       child: Column(
         children: [
@@ -340,11 +328,14 @@ class _ProductsScreenState extends State<ProductsScreen> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
             decoration: BoxDecoration(
-              color: Colors.grey.shade50,
+              color: const Color(0xFFF8FAFC),
               borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(16),
-                topRight: Radius.circular(16),
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
               ),
+              border: Border(
+                  bottom:
+                      BorderSide(color: AppTheme.borderColor.withOpacity(0.5))),
             ),
             child: const Row(
               children: [
@@ -387,20 +378,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
   }
 
   Widget _buildDesktopProductRow(Product product) {
-    Color statusColor;
-    switch (product.status) {
-      case 'Active':
-        statusColor = AppTheme.successColor;
-        break;
-      case 'Low Stock':
-        statusColor = AppTheme.warningColor;
-        break;
-      case 'Out of Stock':
-        statusColor = AppTheme.errorColor;
-        break;
-      default:
-        statusColor = Colors.grey;
-    }
+    // Determine status based on stock quantity
+    final (statusText, statusColor) = _getStatusInfo(product);
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
@@ -415,18 +394,25 @@ class _ProductsScreenState extends State<ProductsScreen> {
           Expanded(child: Text('LKR${product.price}')),
           Expanded(child: Text('${product.stockQuantity}')),
           Expanded(
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              decoration: BoxDecoration(
-                color: statusColor.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Text(
-                product.status,
-                style: TextStyle(
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: statusColor.withOpacity(0.15),
+                  borderRadius: BorderRadius.circular(20),
+                  border:
+                      Border.all(color: statusColor.withOpacity(0.3), width: 1),
+                ),
+                child: Text(
+                  statusText,
+                  style: TextStyle(
                     color: statusColor,
                     fontSize: 12,
-                    fontWeight: FontWeight.w600),
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
               ),
             ),
           ),
@@ -455,5 +441,16 @@ class _ProductsScreenState extends State<ProductsScreen> {
         ],
       ),
     );
+  }
+
+  // Helper method to determine status based on stock quantity
+  (String, Color) _getStatusInfo(Product product) {
+    if (product.stockQuantity == 0) {
+      return ('Out of Stock', AppTheme.errorColor);
+    } else if (product.stockQuantity <= product.minStockLevel) {
+      return ('Low Stock', AppTheme.warningColor);
+    } else {
+      return ('Active', AppTheme.successColor);
+    }
   }
 }
