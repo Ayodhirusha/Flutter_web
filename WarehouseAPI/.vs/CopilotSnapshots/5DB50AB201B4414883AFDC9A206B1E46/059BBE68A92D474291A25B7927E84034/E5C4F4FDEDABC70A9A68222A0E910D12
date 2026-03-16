@@ -1,0 +1,102 @@
+﻿using Dapper;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
+using System.Data;
+using WarehouseAPI.Models;
+
+[Route("api/[controller]")]
+[ApiController]
+public class ProductsController : ControllerBase
+{
+    private readonly IConfiguration _configuration;
+
+    public ProductsController(IConfiguration configuration)
+    {
+        _configuration = configuration;
+    }
+
+    private IDbConnection Connection =>
+        new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
+
+    [HttpGet]
+    public async Task<IActionResult> GetProducts()
+    {
+        try
+        {
+            using var db = Connection;
+
+            var result = await db.QueryAsync<Product>(
+                "sp_GetProducts",
+                commandType: CommandType.StoredProcedure
+            );
+
+            return Ok(result);
+        }
+        catch (SqlException ex)
+        {
+            // Return a clear error so the caller (and developer) can see the underlying DB problem
+            return StatusCode(500, new
+            {
+                error = "Database access error",
+                message = ex.Message,
+                hint = "Ensure the connection string in appsettings.json points to an existing SQL Server instance and that the 'WarehouseDB' database exists and is accessible by the current user."
+            });
+        }
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> AddProduct(Product product)
+    {
+        using var db = Connection;
+
+        await db.ExecuteAsync(
+            "sp_AddProduct",
+            product,
+            commandType: CommandType.StoredProcedure
+        );
+
+        return Ok();
+    }
+
+    [HttpPut]
+    public async Task<IActionResult> UpdateProduct(Product product)
+    {
+        using var db = Connection;
+
+        await db.ExecuteAsync(
+            "sp_UpdateProduct",
+            product,
+            commandType: CommandType.StoredProcedure
+        );
+
+        return Ok();
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteProduct(int id)
+    {
+        using var db = Connection;
+
+        await db.ExecuteAsync(
+            "sp_DeleteProduct",
+            new { ProductID = id },
+            commandType: CommandType.StoredProcedure
+        );
+
+        return Ok();
+    }
+
+    [HttpPost("stock")]
+    public async Task<IActionResult> UpdateStock(int productId, int quantity)
+    {
+        using var db = Connection;
+
+        await db.ExecuteAsync(
+            "sp_UpdateStock",
+            new { ProductID = productId, Quantity = quantity },
+            commandType: CommandType.StoredProcedure
+        );
+
+        return Ok();
+    }
+}
