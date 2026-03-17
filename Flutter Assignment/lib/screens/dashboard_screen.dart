@@ -93,7 +93,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             // Modern Header with Pattern
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.fromLTRB(28, 28, 28, 32),
+              padding: const EdgeInsets.fromLTRB(28, 16, 28, 20),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,

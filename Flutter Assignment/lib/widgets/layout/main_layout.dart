@@ -71,7 +71,8 @@ class MainLayout extends StatelessWidget {
                       end: Alignment.bottomRight,
                       colors: [
                         AppTheme.backgroundColor,
-                        AppTheme.primaryColor.withOpacity(0.05),
+                        const Color.fromARGB(255, 240, 137, 137)
+                            .withValues(alpha: 0.02),
                       ],
                     ),
                   ),
@@ -96,7 +97,7 @@ class MainLayout extends StatelessWidget {
           end: Alignment.bottomRight,
           colors: [
             AppTheme.backgroundColor,
-            AppTheme.primaryColor.withOpacity(0.05),
+            AppTheme.backgroundColor,
           ],
         ),
       ),
