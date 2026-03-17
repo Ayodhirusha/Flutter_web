@@ -1,5 +1,15 @@
 [
   {
+    "ContainingType": "DashboardController",
+    "Method": "GetDashboardStats",
+    "RelativePath": "api/Dashboard/stats",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "ProductsController",
     "Method": "GetProducts",
     "RelativePath": "api/Products",
@@ -27,12 +37,33 @@
   },
   {
     "ContainingType": "ProductsController",
+    "Method": "GetProductById",
+    "RelativePath": "api/Products/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProductsController",
     "Method": "UpdateProduct",
-    "RelativePath": "api/Products",
+    "RelativePath": "api/Products/{id}",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
     "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.String",
+        "IsRequired": true
+      },
       {
         "Name": "product",
         "Type": "WarehouseAPI.Models.Product",
@@ -51,29 +82,34 @@
     "Parameters": [
       {
         "Name": "id",
-        "Type": "System.Int32",
+        "Type": "System.String",
         "IsRequired": true
       }
     ],
     "ReturnTypes": []
   },
   {
-    "ContainingType": "ProductsController",
+    "ContainingType": "StockController",
+    "Method": "GetStockMovements",
+    "RelativePath": "api/Stock/movements",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "StockController",
     "Method": "UpdateStock",
-    "RelativePath": "api/Products/stock",
+    "RelativePath": "api/Stock/update",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "productId",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "quantity",
-        "Type": "System.Int32",
-        "IsRequired": false
+        "Name": "request",
+        "Type": "StockUpdateRequest",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []

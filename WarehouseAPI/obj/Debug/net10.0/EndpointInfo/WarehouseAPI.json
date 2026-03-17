@@ -10,6 +10,18 @@
     }
   ],
   "paths": {
+    "/api/Dashboard/stats": {
+      "get": {
+        "tags": [
+          "Dashboard"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Products": {
       "get": {
         "tags": [
@@ -50,10 +62,42 @@
             "description": "OK"
           }
         }
+      }
+    },
+    "/api/Products/{id}": {
+      "get": {
+        "tags": [
+          "Products"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
       },
       "put": {
         "tags": [
           "Products"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
         ],
         "requestBody": {
           "content": {
@@ -80,9 +124,7 @@
             "description": "OK"
           }
         }
-      }
-    },
-    "/api/Products/{id}": {
+      },
       "delete": {
         "tags": [
           "Products"
@@ -93,12 +135,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "type": [
-                "integer",
-                "string"
-              ],
-              "format": "int32"
+              "type": "string"
             }
           }
         ],
@@ -109,36 +146,42 @@
         }
       }
     },
-    "/api/Products/stock": {
+    "/api/Stock/update": {
       "post": {
         "tags": [
-          "Products"
+          "Stock"
         ],
-        "parameters": [
-          {
-            "name": "productId",
-            "in": "query",
-            "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "type": [
-                "integer",
-                "string"
-              ],
-              "format": "int32"
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StockUpdateRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StockUpdateRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/StockUpdateRequest"
+              }
             }
           },
-          {
-            "name": "quantity",
-            "in": "query",
-            "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "type": [
-                "integer",
-                "string"
-              ],
-              "format": "int32"
-            }
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
           }
+        }
+      }
+    },
+    "/api/Stock/movements": {
+      "get": {
+        "tags": [
+          "Stock"
         ],
         "responses": {
           "200": {
@@ -192,15 +235,13 @@
       "Product": {
         "type": "object",
         "properties": {
-          "productID": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": [
-              "integer",
-              "string"
-            ],
-            "format": "int32"
+          "id": {
+            "type": "string"
           },
-          "productName": {
+          "name": {
+            "type": "string"
+          },
+          "sku": {
             "type": "string"
           },
           "category": {
@@ -214,6 +255,59 @@
             ],
             "format": "double"
           },
+          "stockQuantity": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "minStockLevel": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "status": {
+            "type": "string"
+          },
+          "imageUrl": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "supplier": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "location": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "StockUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "productId": {
+            "type": "string"
+          },
           "quantity": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
             "type": [
@@ -222,8 +316,21 @@
             ],
             "format": "int32"
           },
-          "barcode": {
+          "type": {
             "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "notes": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
@@ -262,7 +369,13 @@
   },
   "tags": [
     {
+      "name": "Dashboard"
+    },
+    {
       "name": "Products"
+    },
+    {
+      "name": "Stock"
     },
     {
       "name": "WeatherForecast"
