@@ -1,0 +1,5 @@
+# Mark generated files as linguist-generated to exclude from language stats
+**/build/web/** linguist-generated
+**/build/** linguist-generated
+**/.dart_tool/** linguist-generated
+**/canvaskit/** linguist-vendored
