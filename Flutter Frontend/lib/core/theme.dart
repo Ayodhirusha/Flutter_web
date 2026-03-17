@@ -35,7 +35,7 @@ class AppTheme {
   static const Color dividerColor = Color(0xFFE2E8F0);
 
   // Gradients
-  static LinearGradient get mainGradient => LinearGradient(
+  static LinearGradient get mainGradient => const LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         colors: [primaryColor, primaryDark],

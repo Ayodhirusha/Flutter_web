@@ -31,7 +31,7 @@ class MainLayout extends StatelessWidget {
                 ),
               ),
               flexibleSpace: Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
@@ -91,7 +91,7 @@ class MainLayout extends StatelessWidget {
 
   Widget _buildMobileLayout(Widget child) {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,

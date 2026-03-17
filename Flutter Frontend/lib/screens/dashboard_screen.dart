@@ -212,7 +212,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Section title
-                  Text(
+                  const Text(
                     'Overview',
                     style: TextStyle(
                       fontSize: 16,
@@ -412,7 +412,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 const SizedBox(height: 16),
                 Text(
                   value,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.w800,
                     color: AppTheme.textPrimary,
@@ -424,7 +424,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   title,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 13,
                     color: AppTheme.textSecondary,
                     fontWeight: FontWeight.w500,
@@ -489,7 +489,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
                   ),
                   const SizedBox(width: 14),
-                  Text(
+                  const Text(
                     'Recent Activity',
                     style: TextStyle(
                       fontSize: 18,
@@ -508,7 +508,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
                 child: Text(
                   '${_recentActivity.length} items',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
                     color: AppTheme.primaryColor,
@@ -574,7 +574,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
                 ],
               );
-            }).toList(),
+            }),
         ],
       ),
     );
@@ -659,7 +659,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     product,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
                       color: AppTheme.textPrimary,
