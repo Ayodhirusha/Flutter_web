@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\ASUS\\Downloads\\flutter frontend and backend\\WarehouseAPI\\WarehouseAPI.csproj": {}
+    "C:\\Users\\ASUS\\Downloads\\Flutter_web\\WarehouseAPI\\WarehouseAPI.csproj": {}
   },
   "projects": {
-    "C:\\Users\\ASUS\\Downloads\\flutter frontend and backend\\WarehouseAPI\\WarehouseAPI.csproj": {
+    "C:\\Users\\ASUS\\Downloads\\Flutter_web\\WarehouseAPI\\WarehouseAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\ASUS\\Downloads\\flutter frontend and backend\\WarehouseAPI\\WarehouseAPI.csproj",
+        "projectUniqueName": "C:\\Users\\ASUS\\Downloads\\Flutter_web\\WarehouseAPI\\WarehouseAPI.csproj",
         "projectName": "WarehouseAPI",
-        "projectPath": "C:\\Users\\ASUS\\Downloads\\flutter frontend and backend\\WarehouseAPI\\WarehouseAPI.csproj",
+        "projectPath": "C:\\Users\\ASUS\\Downloads\\Flutter_web\\WarehouseAPI\\WarehouseAPI.csproj",
         "packagesPath": "C:\\Users\\ASUS\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\ASUS\\Downloads\\flutter frontend and backend\\WarehouseAPI\\obj\\",
+        "outputPath": "C:\\Users\\ASUS\\Downloads\\Flutter_web\\WarehouseAPI\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
