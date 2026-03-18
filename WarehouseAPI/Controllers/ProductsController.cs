@@ -160,6 +160,12 @@ public class ProductsController : ControllerBase
         {
             using var db = Connection;
 
+            // Delete related stock movements first (foreign key constraint)
+            await db.ExecuteAsync(
+                "DELETE FROM StockMovements WHERE ProductId = @Id",
+                new { Id = id }
+            );
+
             await db.ExecuteAsync(
                 "sp_DeleteProduct",
                 new { Id = id },
